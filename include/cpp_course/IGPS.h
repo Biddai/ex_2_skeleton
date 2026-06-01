@@ -1,0 +1,16 @@
+#pragma once
+
+#include <cpp_course/Types.h>
+
+namespace cpp_course {
+
+// **Do not change this interface.**
+class IGPS {
+public:
+    virtual ~IGPS() = default;
+
+    [[nodiscard]] virtual Position3D position() const = 0;
+    [[nodiscard]] virtual Orientation heading() const = 0;
+};
+
+} // namespace cpp_course

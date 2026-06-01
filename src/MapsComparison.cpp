@@ -1,0 +1,24 @@
+#include <cpp_course/MapsComparison.h>
+
+#include <cpp_course/Map3DImpl.h>
+
+namespace cpp_course {
+
+double MapsComparison::compare(const IMap3D& expected,
+                               const IMap3D& actual,
+                               PhysicalLength resolution) {
+    (void)expected;
+    (void)actual;
+    (void)resolution;
+    return -1.0;
+}
+
+double MapsComparison::compare(const std::filesystem::path& expected,
+                               const std::filesystem::path& actual,
+                               PhysicalLength resolution) {
+    const Map3DImpl expected_map{expected, resolution};
+    const Map3DImpl actual_map{actual, resolution};
+    return compare(expected_map, actual_map, resolution);
+}
+
+} // namespace cpp_course
