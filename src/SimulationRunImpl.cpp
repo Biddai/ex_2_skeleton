@@ -43,26 +43,7 @@ SimulationRunImpl::SimulationRunImpl(std::unique_ptr<const IMap3D> hidden_map,
 }
 
 types::SimulationResult SimulationRunImpl::run() {
-    std::vector<types::MissionRunResult> mission_results;
-    mission_results.push_back(mission_control_->runMission());
-
-    const double score = MapsComparison::compare(
-        *hidden_map_,
-        *output_map_,
-        ResolutionRatio{
-            hidden_map_->getMapConfig().resolution,
-            output_map_->getMapConfig().resolution,
-        });
-
-    return types::SimulationResult{
-        simulation_config_,
-        mission_config_,
-        types::ResolutionRequestStatus::Ignored,
-        std::move(mission_results),
-        output_map_file_,
-        output_map_->getMapConfig(),
-        score,
-    };
+    return types::SimulationResult{};
 }
 
 } // namespace drone_mapper

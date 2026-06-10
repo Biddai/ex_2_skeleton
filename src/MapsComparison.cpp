@@ -2,13 +2,12 @@
 
 namespace drone_mapper {
 
-double MapsComparison::compare(const IMap3D& map1,
-                               const IMap3D& map2,
-                               ResolutionRatio resolution_ratio) {
-    (void)map1;
-    (void)map2;
-    (void)resolution_ratio;
-    return -1.0;
+std::vector<double> MapsComparison::compare(const IMap3D& original,
+                               const std::vector<IMap3D*> targets) {
+    (void)original;
+    (void)targets;
+    std::vector<double> vec{100};
+    return vec;
 }
 
 } // namespace drone_mapper

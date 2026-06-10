@@ -5,16 +5,10 @@
 
 namespace drone_mapper {
 
-struct ResolutionRatio {
-    PhysicalLength numerator;
-    PhysicalLength denominator;
-};
-
 class MapsComparison {
 public:
-    [[nodiscard]] static double compare(const IMap3D& map1,
-                                        const IMap3D& map2,
-                                        ResolutionRatio resolution_ratio);
+    [[nodiscard]] static std::vector<double> compare(const IMap3D& origin,
+                                                     const std::vector<IMap3D*> targets); //currently should work with at least 1 target
 };
 
 } // namespace drone_mapper
