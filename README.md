@@ -27,8 +27,8 @@ cmake --build --preset default
 The main build targets are:
 
 ```text
-drone_mapper
 drone_mapper_simulation
+drone_mapper_simulation_test
 maps_comparison
 ```
 
@@ -37,7 +37,7 @@ maps_comparison
 Simulator skeleton:
 
 ```bash
-./build/drone_mapper_simulation [simulation.yaml] [output_path]
+./build/drone_mapper_simulation [<simulation.yaml>] [<output_path>]
 ```
 
 The skeleton wires explicit placeholder components and reports stub results.
@@ -47,7 +47,7 @@ logging, and real simulator behavior etc..
 Maps comparison skeleton:
 
 ```bash
-./build/maps_comparison <map1_path> <map2_path> [resolution_ratio=<res1>/<res2>]
+./build/maps_comparison <origin_map> <target_map> [comparison_config=<path>]
 ```
 
 The provided `MapsComparison` implementation is only a placeholder. You

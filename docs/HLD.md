@@ -73,8 +73,7 @@ classDiagram
 
     class IMappingAlgorithm {
         <<interface>>
-        +nextMove(state, latest_scan) command
-        +applyVoxelUpdates(voxels) void
+        +nextStep(state, latest_scan) step_command
     }
 
     class IMap3D {
@@ -256,18 +255,55 @@ sequenceDiagram
     participant Output as Map3DImpl output map
     participant GPS as MockGPS
     participant Lidar as MockLidar
+    participant Algorithm as MappingAlgorithmImpl
 
     Factory->>Factory: load hidden NpyArray from simulation.map_filename
     Factory->>Hidden: create unique_ptr with shared NpyArray and hidden MapConfig
     Factory->>Output: create unique_ptr with empty shared NpyArray and output MapConfig
     Factory->>GPS: create unique_ptr
     Factory->>Lidar: construct with Hidden and GPS references
+    Factory->>Algorithm: construct with DroneConfig and Output map reference
     Factory->>Drone: construct with component references
     Factory->>Mission: construct with map and drone-control references
     Factory->>Run: transfer ownership plus configs/output path
 ```
+##  Mission Run Flow
 
-## Mission Output Map Flow
+```mermaid
+sequenceDiagram
+    participant Mission as MissionControlImpl
+    participant Drone as DroneControlImpl
+    participant Lidar as ILidar
+    participant Converter as ScanResultToVoxels
+    participant OutputMap as IMutableMap3D output map
+    participant Algorithm as IMappingAlgorithm
+    participant Movement as IDroneMovement
+
+    Mission->>Drone: step()
+    Drone->>Drone: read current DroneState from GPS
+    Drone->>Algorithm: nextStep(current state, latest_scan_or_null)
+    Algorithm-->>Drone: MappingStepCommand
+    Note over Algorithm: Algorithm can inspect the read-only output map reference for planning.
+    opt command has movement
+        Drone->>Drone: validate movement against drone limits and mission rules
+        Drone->>Movement: rotate/advance/elevate(movement)
+        Movement-->>Drone: MovementResult
+    end
+    opt command has scan_orientation
+        Drone->>Lidar: scan(scan_orientation)
+        Lidar-->>Drone: LidarScanResult latest_scan
+        Drone->>Converter: convert(position, heading, latest_scan)
+        Converter-->>Drone: mapped voxels
+        loop each mapped voxel
+            Drone->>OutputMap: set(position, occupancy)
+        end
+    end
+    Drone-->>Mission: DroneStepResult
+```
+
+The first step calls `nextStep(state, nullptr)` because no LiDAR result exists yet. Each step command may request movement, a scan, both, or neither. If both are requested, movement is validated and executed first, then the scan is performed from the updated state and written into the output map.
+
+##  Single Simulation Run Flow
 
 ```mermaid
 sequenceDiagram

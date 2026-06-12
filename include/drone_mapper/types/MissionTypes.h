@@ -29,10 +29,12 @@ struct ErrorRef {
 struct MissionRunResult {
     MissionRunStatus status = MissionRunStatus::Completed;
     std::size_t steps = 0;
-    // double score = 0.0; // moved to simulationResult
-    // std::filesystem::path output_map_file{}; // moved to simulation Result
     // Changed: a run can report multiple errors instead of a single ErrorRef.
     std::vector<ErrorRef> errors{}; // we may have multiple errors
+
+    //Removed in 9.6
+    // double score = 0.0; // moved to simulationResult
+    // std::filesystem::path output_map_file{}; // moved to simulation Result
 };
 
 } // namespace drone_mapper::types
